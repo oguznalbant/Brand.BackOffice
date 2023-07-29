@@ -1,6 +1,6 @@
 ﻿namespace Brand.AdvertManagement.Model.DTO.Response
 {
-    public class AdvertDto
+    public class AdvertListItemResponseDto
     {
         public string Id { get; set; }
         public string ModelName { get; set; }

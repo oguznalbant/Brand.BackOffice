@@ -6,12 +6,12 @@
         {
         }
 
-        public AdvertListResponseDto(IEnumerable<AdvertDto> Adverts)
+        public AdvertListResponseDto(IEnumerable<AdvertListItemResponseDto> adverts)
         {
-            this.Adverts = Adverts;
+            Adverts = adverts;
         }
 
-        public IEnumerable<AdvertDto> Adverts { get; set; }
+        public IEnumerable<AdvertListItemResponseDto> Adverts { get; set; }
 
         /* Pagination */
         public int Page { get; set; }
