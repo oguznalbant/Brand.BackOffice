@@ -1,6 +1,17 @@
 version: '3.4'
 
 services:
+  advertmanagementdb: 
+    container_name: advertmanagementdb
+    image: mcr.microsoft.com/mssql/server
+    environment:
+      SA_PASSWORD: "Test123456"
+      ACCEPT_EULA: "Y"
+      MSSQL_AGENT_ENABLED: "true"
+    restart: always 
+    ports: 
+      - "1433:1433"
+
   brand.advertmanagement:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development

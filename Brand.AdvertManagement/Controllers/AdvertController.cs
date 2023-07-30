@@ -13,22 +13,23 @@ namespace Brand.AdvertManagement.Controllers
         }
 
         [HttpGet("all")]
-        public async Task<AdvertListResponseDto> GetAdvertList([FromQuery] GetAdvertListByFilterRequestDto request)
+        public async Task<ActionResult<AdvertListResponseDto>> GetAdvertList([FromQuery] GetAdvertListByFilterRequestDto request)
         {
             AdvertListResponseDto response = new AdvertListResponseDto();
-            return response;
+            return Ok(response);
         }
 
         [HttpGet("get")]
-        public async Task<AdvertResponseDto> GetAdvert([FromQuery] GetAdvertRequestDto request)
+        public async Task<ActionResult<AdvertResponseDto>> GetAdvert([FromQuery] GetAdvertRequestDto request)
         {
             AdvertResponseDto response = new AdvertResponseDto();
-            return response;
+            return Ok(response);
         }
 
         [HttpPost("visit")]
-        public async Task VisitAdvert([FromQuery] VisitAdvertRequestDto request)
+        public async Task<ActionResult> VisitAdvert([FromQuery] VisitAdvertRequestDto request)
         {
+            return Ok();
             //var requestedIP = Request.Headers;
         }
     }
