@@ -9,7 +9,7 @@ CREATE TABLE Advert(
     ModelId INT, 
     ModelName varchar(100),
     Year INT, 
-    Price TEXT,
+    Price INT,
     Title varchar(200), 
     Date TIMESTAMP,
     CategoryId INT, 

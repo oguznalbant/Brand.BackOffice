@@ -18,7 +18,7 @@
         public string Category { get; set; }
         public decimal Km { get; set; }
         public string Color { get; set; }
-        public int Gear { get; set; }
+        public string Gear { get; set; }
         public string Fuel { get; set; }
         public string FirstPhoto { get; set; }
         public string SecondPhoto { get; set; }

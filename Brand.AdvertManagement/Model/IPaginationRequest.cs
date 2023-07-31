@@ -2,6 +2,6 @@
 {
     public interface IPaginationRequest
     {
-        public int Page { get; set; }
+        public int? Page { get; set; }
     }
 }

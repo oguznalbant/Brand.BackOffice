@@ -2,12 +2,16 @@
 {
     public class GetAdvertListByFilterRequestDto : IPaginationRequest
     {
-        public int CategoryId { get; set; }
-        public decimal Price { get; set; }
-        public int Gear { get; set; }
-        public string Fuel { get; set; }
+        public int? MinPrice { get; set; }
+        public int? MaxPrice { get; set; }
+
+        public IList<string>? CategoryId { get; set; }
+        public IList<string>? Fuel { get; set; }
+        public IList<string>? Gear { get; set; }
+
+        public string? Sort { get; set; }
 
         /* Pagination */
-        public int Page { get; set; }
+        public int? Page { get; set; } = 1;
     }
 }

@@ -22,7 +22,7 @@ namespace Brand.AdvertManagement.Controllers
         public async Task<ActionResult<AdvertListResponseDto>> GetAdvertList([FromQuery] GetAdvertListByFilterRequestDto request)
         {
             var list = await _advertRepository.GetAdvertList(request);
-            if (list != null)
+            if (list.Adverts.Count() < 1)
             {
                 return NoContent();
             }
