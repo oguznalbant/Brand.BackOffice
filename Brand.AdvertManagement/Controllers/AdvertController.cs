@@ -1,6 +1,9 @@
+using Brand.AdvertManagement.Entities;
 using Brand.AdvertManagement.Model.DTO.Request;
 using Brand.AdvertManagement.Model.DTO.Response;
+using Brand.AdvertManagement.Repository;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace Brand.AdvertManagement.Controllers
 {
@@ -8,28 +11,41 @@ namespace Brand.AdvertManagement.Controllers
     [Route("[controller]")]
     public class AdvertController : ControllerBase
     {
-        public AdvertController()
+        private readonly IAdvertRepository _advertRepository;
+
+        public AdvertController(IAdvertRepository advertRepository)
         {
+            _advertRepository = advertRepository;
         }
 
         [HttpGet("all")]
         public async Task<ActionResult<AdvertListResponseDto>> GetAdvertList([FromQuery] GetAdvertListByFilterRequestDto request)
         {
-            AdvertListResponseDto response = new AdvertListResponseDto();
-            return Ok(response);
+            var list = await _advertRepository.GetAdvertList(request);
+            if (list != null)
+            {
+                return NoContent();
+            }
+
+            return Ok(list);
         }
 
         [HttpGet("get")]
         public async Task<ActionResult<AdvertResponseDto>> GetAdvert([FromQuery] GetAdvertRequestDto request)
         {
-            AdvertResponseDto response = new AdvertResponseDto();
-            return Ok(response);
+            var advert = await _advertRepository.GetAdvert(request);
+            if (advert != null)
+            {
+                return NoContent();
+            }
+
+            return Ok(advert);
         }
 
         [HttpPost("visit")]
         public async Task<ActionResult> VisitAdvert([FromQuery] VisitAdvertRequestDto request)
         {
-            return Ok();
+            return Created("test","asd");
             //var requestedIP = Request.Headers;
         }
     }

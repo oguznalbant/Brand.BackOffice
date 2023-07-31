@@ -2,10 +2,17 @@ version: '3.4'
 
 services:
   advertmanagementdb: 
-    image: mcr.microsoft.com/mssql/server
+    image: postgres
+  
+  pgadmin:
+    image: dpage/pgadmin4
   
   brand.advertmanagement:
     image: ${DOCKER_REGISTRY-}brandadvertmanagement
     build:
       context: .
       dockerfile: Brand.AdvertManagement/Dockerfile
+
+volumes:
+   postgres_volume:
+   pgadmin_data: 
