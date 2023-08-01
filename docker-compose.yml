@@ -13,6 +13,9 @@ services:
       context: .
       dockerfile: Brand.AdvertManagement/Dockerfile
 
+  rabbitmq:
+    image: rabbitmq
+
 volumes:
    postgres_volume:
-   pgadmin_data: 
+   pgadmin_data:

@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Brand.AdvertManagement.Model.DTO.Request
 {
@@ -7,7 +8,7 @@ namespace Brand.AdvertManagement.Model.DTO.Request
         public string AdvertId { get; set; }
 
         [JsonIgnore]
-        public string IPAddress { get; set; }
+        public string? IPAddress { get; set; }
 
         [JsonIgnore]
         public DateTime VisitDate { get; set; }

@@ -9,6 +9,6 @@ namespace Brand.AdvertManagement.Repository
 
         Task<AdvertListResponseDto> GetAdvertList(GetAdvertListByFilterRequestDto requestDto);
 
-        Task VisitAdvert(VisitAdvertRequestDto requestDto);
+        Task VisitAdvert(VisitAdvertPublishModel publishModel);
     }
 }

@@ -75,14 +75,14 @@ namespace Brand.AdvertManagement.Repository
             }
         }
 
-        public async Task VisitAdvert(VisitAdvertRequestDto requestDto)
+        public async Task VisitAdvert(VisitAdvertPublishModel publishModel)
         {
             try
             {
                 NpgsqlConnection connection = new NpgsqlConnection(_configuration.GetValue<string>("DatabaseSettings:ConnectionString"));
                 await connection.OpenAsync();
 
-                string commandText = $"INSERT INTO {typeof(AdvertVisit).Name} (AdvertId, IPAdress, VisitDate) VALUES({requestDto.AdvertId},'{requestDto.IPAddress}',{requestDto.VisitDate})";
+                string commandText = $"INSERT INTO {typeof(AdvertVisit).Name} (AdvertId, IPAdress, VisitDate) VALUES({publishModel.AdvertId},'{publishModel.IPAddress}','{publishModel.VisitDate}')";
 
                 var executeAsync = await connection.ExecuteAsync(commandText);
 
@@ -92,6 +92,8 @@ namespace Brand.AdvertManagement.Repository
             {
                 throw ex;
             }
+
+            //TODO: try-catch-abort pattern could be use
         }
 
         private static string FilterSqlCommand(GetAdvertListByFilterRequestDto requestDto, string commandText)
