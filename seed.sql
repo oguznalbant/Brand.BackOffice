@@ -28,3 +28,11 @@ ALTER TABLE Advert OWNER TO admin;
 
 \copy Advert from './tmp/csv/Adverts.csv' delimiter ',' CSV HEADER;
 
+CREATE TABLE AdvertVisit(
+    AdvertId INT,
+    IPAdress varchar(100), 
+    VisitDate TIMESTAMP);
+
+ALTER TABLE AdvertVisit OWNER TO admin;
+
+\copy AdvertVisit from './tmp/csv/AdvertVisits.csv' delimiter ',' CSV HEADER;

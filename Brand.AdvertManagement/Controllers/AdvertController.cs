@@ -45,8 +45,12 @@ namespace Brand.AdvertManagement.Controllers
         [HttpPost("visit")]
         public async Task<ActionResult> VisitAdvert([FromQuery] VisitAdvertRequestDto request)
         {
-            return Created("test","asd");
-            //var requestedIP = Request.Headers;
+            request.IPAddress = "127.0.0.1";
+            request.VisitDate = DateTime.Now;
+
+            await _advertRepository.VisitAdvert(request);
+
+            return Created(request.IPAddress, true);
         }
     }
 }

@@ -12,6 +12,7 @@ services:
         - "5432:5432"
     volumes:
       - ./csv/Adverts.csv:/tmp/csv/Adverts.csv
+      - ./csv/AdvertVisits.csv:/tmp/csv/AdvertVisits.csv
       - ./seed.sql:/docker-entrypoint-initdb.d/seed.sql
 
   pgadmin:

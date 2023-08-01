@@ -75,9 +75,23 @@ namespace Brand.AdvertManagement.Repository
             }
         }
 
-        public Task VisitAdvert(VisitAdvertRequestDto requestDto)
+        public async Task VisitAdvert(VisitAdvertRequestDto requestDto)
         {
-            throw new NotImplementedException();
+            try
+            {
+                NpgsqlConnection connection = new NpgsqlConnection(_configuration.GetValue<string>("DatabaseSettings:ConnectionString"));
+                await connection.OpenAsync();
+
+                string commandText = $"INSERT INTO {typeof(AdvertVisit).Name} (AdvertId, IPAdress, VisitDate) VALUES({requestDto.AdvertId},'{requestDto.IPAddress}',{requestDto.VisitDate})";
+
+                var executeAsync = await connection.ExecuteAsync(commandText);
+
+                await connection.CloseAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         private static string FilterSqlCommand(GetAdvertListByFilterRequestDto requestDto, string commandText)
