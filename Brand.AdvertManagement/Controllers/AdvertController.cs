@@ -21,20 +21,20 @@ namespace Brand.AdvertManagement.Controllers
         [HttpGet("all")]
         public async Task<ActionResult<AdvertListResponseDto>> GetAdvertList([FromQuery] GetAdvertListByFilterRequestDto request)
         {
-            var list = await _advertRepository.GetAdvertList(request);
-            if (list.Adverts.Count() < 1)
+            var response = await _advertRepository.GetAdvertList(request);
+            if (response.Adverts.Count() < 1)
             {
                 return NoContent();
             }
 
-            return Ok(list);
+            return Ok(response);
         }
 
         [HttpGet("get")]
         public async Task<ActionResult<AdvertResponseDto>> GetAdvert([FromQuery] GetAdvertRequestDto request)
         {
             var advert = await _advertRepository.GetAdvert(request);
-            if (advert != null)
+            if (advert == null)
             {
                 return NoContent();
             }

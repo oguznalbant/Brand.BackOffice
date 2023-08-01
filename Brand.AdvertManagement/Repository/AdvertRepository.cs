@@ -30,11 +30,15 @@ namespace Brand.AdvertManagement.Repository
                 await connection.OpenAsync();
 
                 var response = new AdvertResponseDto();
-                string commandText = $"SELECT * FROM {typeof(Advert).Name} WHERE Id = @id";
-                var queryArgs = new { Id = requestDto.Id };
+                string commandText = $"SELECT * FROM {typeof(Advert).Name} WHERE Id = {requestDto.Id}";
 
-                var advert = await connection.QueryFirstAsync<Advert>(commandText, queryArgs);
+                var advert = await connection.QueryFirstOrDefaultAsync<Advert>(commandText);
                 await connection.CloseAsync();
+
+                if (advert == null)
+                {
+                    return null;
+                }
 
                 return _mapper.Map<AdvertResponseDto>(advert);
             }
@@ -53,58 +57,15 @@ namespace Brand.AdvertManagement.Repository
                 await connection.OpenAsync();
 
                 string commandText = $"SELECT * FROM {typeof(Advert).Name} ";
-                string whereText = string.Empty;
+                commandText = FilterSqlCommand(requestDto, commandText);
 
-                // if where statement bigger than 1 then this filled as AND operator
-                string whereAndStatement = string.Empty;
-
-                if (requestDto.CategoryId != null)
-                {
-                    whereText += $"CategoryId IN ({string.Join(", ", requestDto.CategoryId.ToArray())}) ";
-                    whereAndStatement = "AND";
-                }
-
-                if (requestDto.MinPrice != null)
-                {
-                    whereText += $" {whereAndStatement} Price >= {requestDto.MinPrice}";
-                    whereAndStatement = "AND";
-                }
-
-                if (requestDto.MaxPrice != null)
-                {
-                    whereText += $" {whereAndStatement} Price <= {requestDto.MaxPrice}";
-                    whereAndStatement = "AND";
-                }
-
-                if (requestDto.Gear != null)
-                {
-                    whereText += $" {whereAndStatement} Gear IN ('{string.Join("', '", requestDto.Gear.ToArray())}')";
-                    whereAndStatement = "AND";
-                }
-
-                if (requestDto.Fuel != null)
-                {
-                    whereText += $" {whereAndStatement} Fuel IN ('{string.Join("', '", requestDto.Fuel.ToArray())}') ";
-                }
-
-                var queryArgs = new
-                {
-                };
-
-                commandText += (string.IsNullOrEmpty(whereText)) ? string.Empty : string.Format($" WHERE {whereText}");
-
-                if (requestDto.Sort != null)
-                {
-                    commandText += $" ORDER BY {requestDto.Sort.Split('.')[0]} {requestDto.Sort.Split('.')[1]} ";
-                }
-
-                commandText += $"LIMIT {PAGE_SIZE} OFFSET {PAGE_SIZE * requestDto.Page}";
-
-                var advertList = await connection.QueryAsync<Advert>(commandText, queryArgs);
-                await connection.CloseAsync();
+                var queryResult = await connection.QueryMultipleAsync(commandText);
+                var advertList = await queryResult.ReadAsync<Advert>();
+                response.Total = await queryResult.ReadFirstAsync<int>();
 
                 response.Adverts = _mapper.Map<List<AdvertListItemResponseDto>>(advertList);
-                response.Total = response.Adverts.Count();
+
+                await connection.CloseAsync();
 
                 return response;
             }
@@ -117,6 +78,56 @@ namespace Brand.AdvertManagement.Repository
         public Task VisitAdvert(VisitAdvertRequestDto requestDto)
         {
             throw new NotImplementedException();
+        }
+
+        private static string FilterSqlCommand(GetAdvertListByFilterRequestDto requestDto, string commandText)
+        {
+            string whereText = string.Empty;
+
+            // if where statement bigger than 1 then this filled as AND operator
+            string whereAndStatement = string.Empty;
+
+            if (requestDto.CategoryId != null)
+            {
+                whereText += $"CategoryId IN ({string.Join(", ", requestDto.CategoryId.ToArray())}) ";
+                whereAndStatement = "AND";
+            }
+
+            if (requestDto.MinPrice != null)
+            {
+                whereText += $" {whereAndStatement} Price >= {requestDto.MinPrice}";
+                whereAndStatement = "AND";
+            }
+
+            if (requestDto.MaxPrice != null)
+            {
+                whereText += $" {whereAndStatement} Price <= {requestDto.MaxPrice}";
+                whereAndStatement = "AND";
+            }
+
+            if (requestDto.Gear != null)
+            {
+                whereText += $" {whereAndStatement} Gear IN ('{string.Join("', '", requestDto.Gear.ToArray())}')";
+                whereAndStatement = "AND";
+            }
+
+            if (requestDto.Fuel != null)
+            {
+                whereText += $" {whereAndStatement} Fuel IN ('{string.Join("', '", requestDto.Fuel.ToArray())}') ";
+            }
+
+            commandText += (string.IsNullOrEmpty(whereText)) ? string.Empty : string.Format($" WHERE {whereText}");
+
+            if (requestDto.Sort != null)
+            {
+                commandText += $" ORDER BY {requestDto.Sort.Split('.')[0]} {requestDto.Sort.Split('.')[1]} ";
+            }
+
+            commandText += $"LIMIT {PAGE_SIZE} OFFSET {PAGE_SIZE * (requestDto.Page - 1)};";
+
+            commandText += $"SELECT count(*) OVER() FROM {typeof(Advert).Name};";
+
+            return commandText;
         }
     }
 }
