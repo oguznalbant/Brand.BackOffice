@@ -1,6 +1,4 @@
 using Brand.AdvertManagement.Repository;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
