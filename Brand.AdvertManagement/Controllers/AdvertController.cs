@@ -1,10 +1,8 @@
-using Brand.AdvertManagement.Entities;
 using Brand.AdvertManagement.Model.DTO.Request;
 using Brand.AdvertManagement.Model.DTO.Response;
 using Brand.AdvertManagement.Repository;
 using DotNetCore.CAP;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
 
 namespace Brand.AdvertManagement.Controllers
 {
@@ -48,7 +46,7 @@ namespace Brand.AdvertManagement.Controllers
         [HttpPost("visit")]
         public async Task<ActionResult> VisitAdvert([FromBody] VisitAdvertRequestDto request)
         {
-            request.IPAddress = "127.0.0.1";
+            request.IPAddress = Request.HttpContext.Connection.RemoteIpAddress?.ToString();
             request.VisitDate = DateTime.Now;
 
             await _capPublisher.PublishAsync("advert.visited", new VisitAdvertPublishModel(request.AdvertId, request.IPAddress, request.VisitDate));
